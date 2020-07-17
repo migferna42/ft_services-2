@@ -12,8 +12,7 @@ fi
 if ! minikube status >/dev/null 2>&1
 then
     echo Minikube is not started! Starting now...
-    if ! minikube start --vm-driver=virtualbox \
-        --cpus 3 --disk-size=30000mb --memory=3000mb \
+    if ! minikube start --vm-driver=docker \
         --bootstrapper=kubeadm # allow telegraf to query metrics
     then
         echo Cannot start minikube!
@@ -22,3 +21,9 @@ then
     minikube addons enable metrics-server
     minikube addons enable ingress
 fi
+
+eval $(minikube docker-env)
+docker build -t nginx-deployment nginx
+kubectl apply -f nginx.yaml
+kubectl expose deployment nginx-deployment --type=LoadBalancer --port=8080 #--port=443
+minikube service nginx-deployment

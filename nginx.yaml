@@ -1,0 +1,21 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ft_services
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: ft_services
+    spec:
+      containers:
+      - name: nginx-deployment
+        image: nginx-deployment
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        #- containerPort: 443
