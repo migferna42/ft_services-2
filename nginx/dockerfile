@@ -3,6 +3,7 @@ FROM alpine
 RUN apk update
 RUN apk add nginx
 RUN apk add openssl
+RUN apk add bash
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 RUN mkdir /run/nginx
 RUN touch /etc/nginx/openssl.cnf
@@ -16,5 +17,6 @@ RUN openssl req \
   -keyout /etc/ssl/private/self-signed.key \
   -out /etc/ssl/certs/self-signed.crt;
 RUN echo "42" > /var/www/42.html
-EXPOSE 80 443
-CMD nginx -g "daemon off;"
+EXPOSE 8080 443
+CMD nginx && bash
+#-g "daemon off;"

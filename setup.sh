@@ -21,14 +21,14 @@ then
     minikube addons enable metrics-server
 fi
 
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 
 eval $(minikube docker-env)
 
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 docker build -t nginx-image nginx
 kubectl apply -f nginx.yaml 
-kubectl apply -f loadbalancer.yaml
+
 minikube service nginx-service
 
 echo -n "Press a key to continue"
@@ -36,3 +36,4 @@ read hop
 kubectl delete service nginx-service 
 kubectl delete service loadbalancer
 kubectl delete deployment nginx-deployment
+kubectl delete deployment -n metallb-system controller
