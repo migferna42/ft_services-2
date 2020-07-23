@@ -17,6 +17,5 @@ RUN openssl req \
   -keyout /etc/ssl/private/self-signed.key \
   -out /etc/ssl/certs/self-signed.crt;
 RUN echo "42" > /var/www/42.html
-EXPOSE 8080 443
-CMD nginx && bash
-#-g "daemon off;"
+EXPOSE 80 443
+CMD nginx -g "daemon off;"
