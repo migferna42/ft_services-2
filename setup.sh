@@ -45,12 +45,12 @@ then
 fi
 
 EXTERN_IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`
-sed -i -f "s/hop/$EXTERN_IP-$EXTERN_IP/g" srcs/loadbalancer.yaml
-sed -i -f "s/hop/$EXTERN_IP/g" srcs/nginx/nginx.conf
-rm srcs/*-f
+find srcs -type f -exec sed -i -e "s/hop-sed/$EXTERN_IP/g" {} \;
+rm -f srcs/*-e srcs/*/*-e
 
 eval $(minikube docker-env)
 docker build -t nginx-image srcs/nginx
+docker build -t phpmyadmin-image srcs/phpmyadmin
 kubectl apply -f srcs
 
 sleep 3
@@ -60,9 +60,6 @@ read hop
 
 
 # clean up
-#kubectl delete service nginx-service
-kubectl delete deployment nginx-deployment
-kubectl delete service loadbalancer
-sed -i -f "s/$EXTERN_IP-$EXTERN_IP/hop/g" srcs/loadbalancer.yaml
-sed -i -f "s/$EXTERN_IP/hop/g" srcs/nginx/nginx.conf
-rm srcs/*-f
+kubectl delete -f srcs
+find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;
+rm -f srcs/*-e srcs/*/*-e

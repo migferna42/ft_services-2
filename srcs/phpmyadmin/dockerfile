@@ -1,0 +1,8 @@
+FROM alpine
+RUN apk update && apk upgrade && apk add bash
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.tar.gz
+RUN tar -xvf phpMyAdmin-4.9.0.1-all-languages.tar.gz
+RUN mkdir /www
+COPY config.inc.php phpMyAdmin-4.9.0.1-all-languages/
+EXPOSE 5000
+CMD mv phpMyAdmin-4.9.0.1-all-languages /www/phpmyadmin

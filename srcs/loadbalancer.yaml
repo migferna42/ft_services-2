@@ -9,7 +9,7 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - hop
+      - hop-sed-hop-sed
 
 ---
 
@@ -29,6 +29,8 @@ data:
         protocol: TCP
         port: 443
         targetPort: 443
+      - name: php
+        protocol: TCP
+        port: 5000
+        targetPort: 5000
       type: LoadBalancer
-
-# ---
