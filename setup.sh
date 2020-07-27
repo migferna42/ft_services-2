@@ -39,22 +39,30 @@ then
     fi
     minikube addons enable metrics-server
 	kubectl edit configmap -n kube-system kube-proxy
-	#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-	#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-	#kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 fi
 
-eval $(minikube docker-env)
-#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-#kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-docker build -t nginx-image nginx
-kubectl apply -f nginx.yaml
-kubectl apply -f loadbalancer.yaml
+EXTERN_IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`
+sed -i -f "s/hop/$EXTERN_IP-$EXTERN_IP/g" srcs/loadbalancer.yaml
+sed -i -f "s/hop/$EXTERN_IP/g" srcs/nginx/nginx.conf
+rm srcs/*-f
 
-minikube service loadbalancer
+eval $(minikube docker-env)
+docker build -t nginx-image srcs/nginx
+kubectl apply -f srcs
+
+sleep 3
+open http://$EXTERN_IP
 echo "\nPress a key to continue"
 read hop
 
-kubectl delete service nginx-service
+
+# clean up
+#kubectl delete service nginx-service
 kubectl delete deployment nginx-deployment
 kubectl delete service loadbalancer
+sed -i -f "s/$EXTERN_IP-$EXTERN_IP/hop/g" srcs/loadbalancer.yaml
+sed -i -f "s/$EXTERN_IP/hop/g" srcs/nginx/nginx.conf
+rm srcs/*-f

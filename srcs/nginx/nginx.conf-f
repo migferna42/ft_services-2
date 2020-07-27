@@ -1,0 +1,25 @@
+server {
+    listen 80;
+	listen [::]:80 ipv6only=on;
+
+	server_name 192.168.99.111;
+
+	return 301 https://$server_name$request_uri;
+}
+
+server {
+	listen 443 ssl;
+	listen [::]:443 ipv6only=on ssl;
+
+	root /var/www/;
+	location / {
+		autoindex on;
+		autoindex_format html;
+		try_files $uri $uri/ =404;
+	}
+
+	ssl_certificate /etc/ssl/certs/self-signed.crt;
+	ssl_certificate_key /etc/ssl/private/self-signed.key;
+	ssl_protocols TLSv1.2;
+	ssl_ciphers HIGH:!aNULL:!MD5;
+}
