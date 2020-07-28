@@ -33,4 +33,8 @@ data:
         protocol: TCP
         port: 5000
         targetPort: 5000
+      - name: wordpress
+        protocol: TCP
+        port: 5050
+        targetPort: 5050
       type: LoadBalancer

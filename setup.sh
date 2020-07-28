@@ -51,6 +51,8 @@ rm -f srcs/*-e srcs/*/*-e
 eval $(minikube docker-env)
 docker build -t nginx-image srcs/nginx
 docker build -t phpmyadmin-image srcs/phpmyadmin
+#docker build -t mysql-image srcs/mysql
+docker build -t wordpress-image srcs/wordpress
 kubectl apply -f srcs
 
 sleep 3

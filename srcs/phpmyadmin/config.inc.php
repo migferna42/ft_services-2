@@ -5,16 +5,16 @@
  * manual configuration. For easier setup you can use setup/
  *
  * All directives are explained in documentation in the doc/ folder
- * or at <https://docs.phpmyadmin.net/>.
+ * or at <http://docs.phpmyadmin.net/>.
  *
  * @package PhpMyAdmin
  */
 
 /**
  * This is needed for cookie based authentication to encrypt password in
- * cookie. Needs to be 32 chars long.
+ * cookie
  */
-$cfg['blowfish_secret'] = '12345678912345679812345678900012';
+$cfg['blowfish_secret'] = ''; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
 /**
  * Servers configuration
@@ -28,9 +28,13 @@ $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
-$cfg['Servers'][$i]['host'] = 'hop-sed:5000';
+$cfg['Servers'][$i]['host'] = 'mysql';
+$cfg['Servers'][$i]['port'] = 3306;
+$cfg['Servers'][$i]['connect_type'] = 'tcp';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
+$cfg['Servers'][$i]['extension'] = 'mysqli';
+
 
 /**
  * phpMyAdmin configuration storage settings.
@@ -63,6 +67,8 @@ $cfg['Servers'][$i]['AllowNoPassword'] = true;
 // $cfg['Servers'][$i]['central_columns'] = 'pma__central_columns';
 // $cfg['Servers'][$i]['designer_settings'] = 'pma__designer_settings';
 // $cfg['Servers'][$i]['export_templates'] = 'pma__export_templates';
+/* Contrib / Swekey authentication */
+// $cfg['Servers'][$i]['auth_swekey_config'] = '/etc/swekey-pma.conf';
 
 /**
  * End of servers configuration
@@ -150,5 +156,5 @@ $cfg['SaveDir'] = '';
 
 /**
  * You can find more configuration options in the documentation
- * in the doc/ folder or at <https://docs.phpmyadmin.net/>.
+ * in the doc/ folder or at <http://docs.phpmyadmin.net/>.
  */

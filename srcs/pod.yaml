@@ -17,12 +17,12 @@
 #       targetPort: 443
 # #   type: LoadBalancer
 
----
+# ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: standalone
 spec:
   selector:
     matchLabels:
@@ -33,25 +33,36 @@ spec:
       labels:
         app: ft_services
     spec:
-      # volumes:
-      # - name: shared-data
+      volumes:
+      - name: shared-data
+        emptyDir: {}
       containers:
       - name: nginx
         image: nginx-image
-        # volumeMounts:
-        #   - name: shared-data
-        #     mountPath: /var/www
+        volumeMounts:
+          - name: shared-data
+            mountPath: /www
         imagePullPolicy: Never
         ports:
-          - containerPort: 80
-          - containerPort: 443
-          - containerPort: 5000
-      # - name: phpmyadmin
-      #   image: phpmyadmin-image
-      #   volumeMounts:
-      #     - name: shared-data
-      #       mountPath: /www
-      #   imagePullPolicy: Never
-      #   ports:
-      #     - containerPort: 80
-      #       hostPort: 5000
+        - containerPort: 80
+        - containerPort: 443
+      - name: phpmyadmin
+        image: phpmyadmin-image
+        volumeMounts:
+        - name: shared-data
+          mountPath: /www
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+      - name: mysql
+        image: mysql-image
+        imagePullPolicy: Never
+      - name: wordpress
+        image: wordpress-image
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: shared-data
+          mountPath: /www
+        ports:
+        - containerPort: 5050
+

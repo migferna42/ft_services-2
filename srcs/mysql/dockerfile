@@ -1,0 +1,7 @@
+FROM alpine
+RUN apk update && apk upgrade && apk add mysql mysql-client bash
+COPY my.cnf /etc/mysql/
+COPY wordpressconf.sql /
+COPY setup.sh /
+RUN mkdir /database /run/mysqld
+CMD sh /setup.sh
