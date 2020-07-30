@@ -1,15 +1,20 @@
 FROM alpine
-RUN apk update && apk upgrade && apk add bash sed
-RUN apk add php7-fpm php7-mcrypt php7-soap php7-openssl php7-gmp php7-pdo_odbc php7-json php7-dom php7-pdo php7-zip php7-mysqli php7-sqlite3 php7-apcu php7-pdo_pgsql php7-bcmath php7-gd php7-odbc php7-pdo_mysql php7-pdo_sqlite php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-iconv php7-pdo_dblib php7-curl php7-ctype
-RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.tar.gz
-RUN mkdir /run/php-fpm7 /www \
-&& tar -xvf phpMyAdmin-4.9.0.1-all-languages.tar.gz \
+RUN apk update && apk upgrade \
+# php server set up
+&& apk add bash sed php7-fpm mysql mysql-client php7-mysqli php7-mcrypt php7-soap php7-openssl php7-gmp php7-pdo_odbc php7-json php7-dom php7-pdo php7-zip php7-sqlite3 php7-apcu php7-pdo_pgsql php7-bcmath php7-gd php7-odbc php7-pdo_mysql php7-pdo_sqlite php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-iconv php7-pdo_dblib php7-curl php7-ctype php7-session php7-mbstring \
 && sed -i -e 's/9000/5000/g' /etc/php7/php-fpm.d/www.conf \
 && rm -rf /etc/php7/php-fpm.d/www.conf-e /var/cache/apk/*
+# phpmyadmin set up
+RUN mkdir /run/php-fpm7 /www /usr/share/webapps\
+&& cd /usr/share/webapps \
+&& wget http://files.directadmin.com/services/all/phpMyAdmin/phpMyAdmin-5.0.2-all-languages.tar.gz \
+&& tar zxvf phpMyAdmin-5.0.2-all-languages.tar.gz \
+&& mv phpMyAdmin-5.0.2-all-languages phpmyadmin
 
-COPY config.inc.php phpMyAdmin-4.9.0.1-all-languages/
-COPY info.php /info.php
+COPY config.inc.php /usr/share/webapps/phpmyadmin/
+COPY info5000.php /
 
 EXPOSE 5000
 
-CMD mv phpMyAdmin-4.9.0.1-all-languages /www/phpmyadmin && mv /info.php /www/info.php && php-fpm7 -F
+CMD sleep 10 && mv /usr/share/webapps/phpmyadmin /www \
+&& mv /info5000.php /www && chmod -R 775 /www/phpmyadmin && php-fpm7 -F

@@ -16,10 +16,28 @@
  */
 $cfg['blowfish_secret'] = ''; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
+
+$vars = array(
+  'PMA_HOST',
+'PMA_PORT',
+'PMA_USER',
+'MYSQL_ROOT_PASSWORD'
+);
+
+/**
+* Stock env variables in tab
+*/
+foreach ($vars as $var) {
+  $env = getenv($var);
+  if (!isset($_ENV[$var]) && $env !== false) {
+      $_ENV[$var] = $env;
+  }
+}
+
 /**
  * Servers configuration
  */
-$i = 0;
+$i = 1;
 
 /**
  * First server
@@ -29,8 +47,8 @@ $i++;
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
 $cfg['Servers'][$i]['host'] = 'mysql';
-$cfg['Servers'][$i]['port'] = 3306;
-$cfg['Servers'][$i]['connect_type'] = 'tcp';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['port'] = '3306';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
 $cfg['Servers'][$i]['extension'] = 'mysqli';
@@ -119,7 +137,7 @@ $cfg['SaveDir'] = '';
  * uncomment the desired line:
  * default = 'en'
  */
-//$cfg['DefaultLang'] = 'en';
+$cfg['DefaultLang'] = 'en';
 //$cfg['DefaultLang'] = 'de';
 
 /**
@@ -152,9 +170,12 @@ $cfg['SaveDir'] = '';
  * ('ask' | 'always' | 'never')
  * default = 'ask'
  */
-//$cfg['SendErrorReports'] = 'always';
+$cfg['SendErrorReports'] = 'always';
 
 /**
  * You can find more configuration options in the documentation
  * in the doc/ folder or at <http://docs.phpmyadmin.net/>.
  */
+
+ // bidouillage
+ //$cfg['AllowThirdPartyFraming']

@@ -1,9 +1,15 @@
 FROM alpine
-RUN apk add bash
+RUN apk add bash gettext wget curl mysql-client
+RUN apk add php7-common php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl php7-mbstring php7-json php7-session php7-phar php7-cli php7-zip php7-iconv php7-xml php7-imap php7-cgi fcgi php7-pdo php7-pdo_mysql php7-soap php7-xmlrpc php7-posix php7-mcrypt php7-gettext php7-ldap php7-ctype php7-dom
 RUN wget https://wordpress.org/latest.tar.gz -P /tmp \
-&& mkdir /wordpress \
+&& mkdir /wordpress /run/php-fpm7 /www \
 && tar xzf /tmp/latest.tar.gz --strip-components=1 -C /wordpress\
-&& mkdir /www
+&& sed -i -e 's/9000/5050/g' /etc/php7/php-fpm.d/www.conf \
+&& rm -rf /etc/php7/php-fpm.d/www.conf-e /var/cache/apk/*
 COPY wp-config.php /wordpress
+RUN chmod -R 775 /wordpress
+COPY wordpressconf.sql /
+COPY info5050.php /
+COPY setup.sh /
 EXPOSE 5050
-CMD mv /wordpress /www
+CMD mv /wordpress /www && chmod -R 775 /www/wordpress && mv /info5050.php /www && sh /setup.sh && php-fpm7 -F

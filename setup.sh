@@ -44,24 +44,30 @@ then
 	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 fi
 
-EXTERN_IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`
-find srcs -type f -exec sed -i -e "s/hop-sed/$EXTERN_IP/g" {} \;
-rm -f srcs/*-e srcs/*/*-e
-
 eval $(minikube docker-env)
+
+EXTERN_IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`;
+find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;;
+rm -f srcs/*-e srcs/*/*-e;
+find srcs -type f -exec sed -i -e "s/hop-sed/$EXTERN_IP/g" {} \;
+rm -f srcs/*-e srcs/*/*-e;
+
+docker build -t mysql-image srcs/mysql
+docker build -t cleaner-image srcs/cleaner
+kubectl apply -f srcs/mysql
+
 docker build -t nginx-image srcs/nginx
 docker build -t phpmyadmin-image srcs/phpmyadmin
-#docker build -t mysql-image srcs/mysql
 docker build -t wordpress-image srcs/wordpress
 kubectl apply -f srcs
 
-sleep 3
-open http://$EXTERN_IP
-echo "\nPress a key to continue"
+sleep 6 && open http://$EXTERN_IP
+echo "\nPress a key to kill and clean up"
 read hop
 
 
 # clean up
 kubectl delete -f srcs
-find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;
-rm -f srcs/*-e srcs/*/*-e
+kubectl delete -f srcs/mysql;
+find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;;
+rm -f srcs/*-e srcs/*/*-e;
