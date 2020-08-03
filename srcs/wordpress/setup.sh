@@ -6,7 +6,7 @@ MYSQL="mysql -h mysql -u root"
 
 # init database
 
-$MYSQL -e "grant all privileges on */* to 'root'@'%';"
+$MYSQL -e "grant all privileges on */* to 'root'@'%';"
 $MYSQL -e 'flush privileges;'
 $MYSQL -e 'drop database if exists wordpress;'
 $MYSQL -e 'CREATE DATABASE wordpress;'

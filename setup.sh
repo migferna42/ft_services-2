@@ -31,7 +31,7 @@ export MINIKUBE_HOME=$minikube_destination
 if ! minikube status >/dev/null 2>&1
 then
     echo Minikube is not started! Starting now...
-    if ! minikube start --vm-driver=virtualbox \
+    if ! minikube start --vm-driver=docker #virtualbox \
         --bootstrapper=kubeadm # allow telegraf to query metrics
     then
         echo Cannot start minikube!
@@ -47,27 +47,25 @@ fi
 eval $(minikube docker-env)
 
 EXTERN_IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`;
-find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;;
+find srcs -type f -exec sed -i -e "s/192.168.99.117/hop-sed/g" {} \;;
 rm -f srcs/*-e srcs/*/*-e;
 find srcs -type f -exec sed -i -e "s/hop-sed/$EXTERN_IP/g" {} \;
 rm -f srcs/*-e srcs/*/*-e;
 
 docker build -t mysql-image srcs/mysql
 docker build -t cleaner-image srcs/cleaner
-kubectl apply -f srcs/mysql
-
 docker build -t nginx-image srcs/nginx
 docker build -t phpmyadmin-image srcs/phpmyadmin
 docker build -t wordpress-image srcs/wordpress
 kubectl apply -f srcs
 
 sleep 6 && open http://$EXTERN_IP
+# minikube dashboard
 echo "\nPress a key to kill and clean up"
 read hop
 
 
 # clean up
 kubectl delete -f srcs
-kubectl delete -f srcs/mysql;
 find srcs -type f -exec sed -i -e "s/$EXTERN_IP/hop-sed/g" {} \;;
 rm -f srcs/*-e srcs/*/*-e;

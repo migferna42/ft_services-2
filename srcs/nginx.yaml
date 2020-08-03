@@ -1,64 +1,60 @@
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   namespace: metallb-system
-#   name: config
-# data:
-#   config: |
-#     address-pools:
-#     - name: default
-#       protocol: layer2
-#       addresses:
-#       - 192.168.99.117-192.168.99.117
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 172.17.0.0-172.17.0.9
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: pv
-  labels:
-    type: local
+  name: nginx-pv
 spec:
   storageClassName: manual
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: "/data"
+    path: "/var/lib/nginx"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pv-claim
+  name: nginx-pv-claim
   labels:
-    app: ft_services
+    app: nginx
 spec:
   storageClassName: manual
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
-  # apiVersion: v1
-  # kind: Service
-  # metadata:
-  #   name: nginx
-  # spec:
-  #   selector:
-  #     app: ft_services
-  #     tier: nginx
-  #     run: nginx
-  #   ports:
-  #   - name: http
-  #     protocol: TCP
-  #     port: 80
-  #     targetPort: 80
-  #   - name: https
-  #     protocol: TCP
-  #     port: 443
-  #     targetPort: 443
-  #   type: LoadBalancer
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: nginx
+  spec:
+    selector:
+      app: nginx
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+    type: LoadBalancer
 
 ---
 apiVersion: apps/v1
@@ -68,19 +64,17 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: ft_services
+      app: nginx
   replicas: 1
   template:
     metadata:
       labels:
-        app: ft_services
-        tier: nginx
-        run: nginx
+        app: nginx
     spec:
       volumes:
       - name: shared-data
         persistentVolumeClaim:
-          claimName: pv-claim
+          claimName: nginx-pv-claim
       containers:
       - name: nginx
         image: nginx-image
@@ -91,30 +85,6 @@ spec:
         ports:
         - containerPort: 80
         - containerPort: 443
-      - name: wordpress
-        image: wordpress-image
-        imagePullPolicy: Never
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
-        ports:
-        - containerPort: 5050
-      - name: phpmyadmin
-        image: phpmyadmin-image
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5000
-      # - name: mysql
-      #   image: mysql-image
-      #   imagePullPolicy: Never
-      #   # volumeMounts:
-      #   # - name: mysql-data
-      #   #   mountPath: /var/lib/mysql
-      #   ports:
-      #   - containerPort: 3306
       initContainers:
       - name: cleaner
         image: cleaner-image

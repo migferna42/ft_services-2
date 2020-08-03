@@ -9,8 +9,8 @@ RUN apk add bash sed
 RUN apk add nginx \
 && adduser -D -g 'www' www \
 && mkdir /www \
-# && chown -R www:www /var/lib/nginx \
-&& mkdir /run/nginx
+&& chown -R www:www /var/lib/nginx \
+&& mkdir /run/nginx /wordpress /phpmyadmin
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # ssl set up
@@ -21,9 +21,10 @@ RUN apk add openssl \
 && mkdir -p /etc/ssl/certs \
 && openssl req \
   -x509 -nodes -days 3650 -newkey rsa:2048 \
-  -subj "/CN=192.168.99.117" \
+  -subj "/CN=172.17.0.2" \
   -config /etc/nginx/openssl.cnf \
   -keyout /etc/ssl/private/self-signed.key \
   -out /etc/ssl/certs/self-signed.crt
 
-CMD chmod 755 -R /www && echo "hop" > /www/hop.html && nginx -g "daemon off;"
+CMD mv /phpmyadmin /www && mv /wordpress /www && \
+chmod 775 -R /www && nginx -g "daemon off;"
