@@ -9,7 +9,7 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 172.17.0.0-172.17.0.9
+      - hop-sed-hop-sed
 ---
 apiVersion: v1
 kind: PersistentVolume
