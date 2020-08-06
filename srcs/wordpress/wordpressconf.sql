@@ -107,9 +107,9 @@ CREATE TABLE `wp_options` (
 --
 
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
-(1, 'siteurl', 'http://hop-sed/wordpress', 'yes'),
-(2, 'home', 'http://hop-sed/wordpress', 'yes'),
-(3, 'blogname', 'FCK FT_SERVICES', 'yes'),
+(1, 'siteurl', 'http://192.168.99.121:5050', 'yes'),
+(2, 'home', 'http://192.168.99.121:5050', 'yes'),
+(3, 'blogname', 'FUCK FT_SERVICES', 'yes'),
 (4, 'blogdescription', 'sisi', 'yes'),
 (5, 'users_can_register', '0', 'yes'),
 (6, 'admin_email', 'mbrunel@student.42.fr', 'yes'),

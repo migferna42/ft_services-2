@@ -1,15 +1,22 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - hop-sed-hop-sed
+  name: a-nginx
+  annotations:
+    metallb.universe.tf/allow-shared-ip : ft_services
+spec:
+  selector:
+    app: ft_services
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 443
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -29,7 +36,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nginx-pv-claim
   labels:
-    app: nginx
+    app: ft_services
 spec:
   storageClassName: manual
   accessModes:
@@ -38,25 +45,6 @@ spec:
     requests:
       storage: 1Gi
 ---
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: nginx
-  spec:
-    selector:
-      app: nginx
-    ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-    - name: https
-      protocol: TCP
-      port: 443
-      targetPort: 443
-    type: LoadBalancer
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -64,12 +52,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: ft_services
   replicas: 1
   template:
     metadata:
       labels:
-        app: nginx
+        app: ft_services
     spec:
       volumes:
       - name: shared-data

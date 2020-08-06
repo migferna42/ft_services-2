@@ -19,9 +19,10 @@ RUN apk add openssl \
 && cp /etc/ssl/openssl.cnf /etc/nginx/openssl.cnf \
 && mkdir -p /etc/ssl/private \
 && mkdir -p /etc/ssl/certs \
+&& rm -rf /var/cache/apk/* \
 && openssl req \
   -x509 -nodes -days 3650 -newkey rsa:2048 \
-  -subj "/CN=hop-sed" \
+  -subj "/CN=192.168.99.121" \
   -config /etc/nginx/openssl.cnf \
   -keyout /etc/ssl/private/self-signed.key \
   -out /etc/ssl/certs/self-signed.crt

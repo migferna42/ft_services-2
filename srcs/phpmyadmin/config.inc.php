@@ -14,30 +14,12 @@
  * This is needed for cookie based authentication to encrypt password in
  * cookie
  */
-$cfg['blowfish_secret'] = ''; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
-
-
-$vars = array(
-  'PMA_HOST',
-'PMA_PORT',
-'PMA_USER',
-'MYSQL_ROOT_PASSWORD'
-);
-
-/**
-* Stock env variables in tab
-*/
-foreach ($vars as $var) {
-  $env = getenv($var);
-  if (!isset($_ENV[$var]) && $env !== false) {
-      $_ENV[$var] = $env;
-  }
-}
+$cfg['blowfish_secret'] = 'Fuck_Ft-serv1ces!Fuck_Ft-serv1ces!Fuck_Ft-serv1ces!Fuck_Ft-serv1ces!'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
 /**
  * Servers configuration
  */
-$i = 1;
+$i = 0;
 
 /**
  * First server
@@ -48,10 +30,12 @@ $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
 $cfg['Servers'][$i]['host'] = 'mysql';
 $cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = '';
 $cfg['Servers'][$i]['port'] = '3306';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
 $cfg['Servers'][$i]['extension'] = 'mysqli';
+$cfg['AllowArbitraryServer'] = true;
 
 
 /**
