@@ -12,33 +12,6 @@ spec:
     app: grafana
   type: LoadBalancer
 ---
-  apiVersion: v1
-  kind: PersistentVolume
-  metadata:
-    name: grafana-pv
-  spec:
-    storageClassName: manual
-    capacity:
-      storage: 1Gi
-    accessModes:
-    - ReadWriteOnce
-    hostPath:
-      path: "/var/lib/grafana"
----
-  apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: grafana-pv-claim
-    labels:
-      app: grafana
-  spec:
-    storageClassName: manual
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 1Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,24 +36,9 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 3000
-          name: http
         env:
         - name: GF_SECURITY_ADMIN_USER
           value: root
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: root
-        volumeMounts:
-          - name: grafana-pv
-            mountPath: /usr/share/grafana
-      volumes:
-      - name: grafana-pv
-        persistentVolumeClaim:
-          claimName: grafana-pv-claim
-      initContainers:
-        - name: cleaner
-          image: cleaner-image
-          volumeMounts:
-          - name: grafana-pv
-            mountPath: /www
-          imagePullPolicy: Never
 

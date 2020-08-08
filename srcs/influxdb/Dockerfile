@@ -1,12 +1,5 @@
 FROM alpine
-
-RUN apk update && apk add influxdb && \
-    apk add --no-cache --upgrade bash
-
-COPY setup.sh .
-
-RUN chmod +x setup.sh
-
+RUN apk update && apk add bash influxdb \
+&& rm -rf /var/cache/apk/*
 EXPOSE 8086
-
-CMD ./setup.sh
+CMD influxd run -config /etc/influxdb.conf

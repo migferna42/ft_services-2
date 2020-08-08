@@ -5,6 +5,7 @@ datasources:
   access: proxy
   database: telegraf
   isDefault: true
-  user: root
-  password: root
+  user: telegraf
+  secureJsonData:
+    password: root
   url: http://influxdb:8086

@@ -1,12 +1,9 @@
-# # config file version
 apiVersion: 1
-
 providers:
 - name: 'default'
   orgId: 1
+  type: file
   folder: ''
   folderUid: ''
-  type: file
   options:
-    path: /usr/share/grafana/conf/provisioning/dashboards/mine
- 
+    path: "/usr/share/grafana/conf/provisioning/dashboards/mine"

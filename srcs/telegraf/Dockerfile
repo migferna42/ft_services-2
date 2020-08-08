@@ -1,5 +1,6 @@
 FROM alpine
-ENV MINIKUBE_IP=192.168.99.121
+ARG IP
+ENV MINIKUBE_IP=${IP}
 
 RUN mkdir /etc/telegraf && \
     wget https://dl.influxdata.com/telegraf/releases/telegraf-1.13.3-static_linux_amd64.tar.gz && \
@@ -10,11 +11,11 @@ RUN mkdir /etc/telegraf && \
     rm -rf /var/cache/apk/*
 
 RUN apk add curl nano gettext
-COPY peertelegraf.conf /etc/telegraf/telegraf.conf
-COPY setup.sh .
+COPY telegraf.conf /etc/telegraf/telegraf.conf
+COPY start.sh .
 
-RUN chmod +x setup.sh
+RUN chmod +x start.sh
 
 EXPOSE 4999
 
-CMD ./setup.sh
+CMD ./start.sh

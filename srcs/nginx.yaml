@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: a-nginx
-  annotations:
-    metallb.universe.tf/allow-shared-ip : ft_services
+  name: nginx
+  # annotations:
+  #   metallb.universe.tf/allow-shared-ip : ft_services
 spec:
   selector:
-    app: ft_services
+    app: nginx
   ports:
   - name: http
     protocol: TCP
@@ -36,7 +36,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nginx-pv-claim
   labels:
-    app: ft_services
+    app: nginx
 spec:
   storageClassName: manual
   accessModes:
@@ -52,12 +52,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: ft_services
+      app: nginx
   replicas: 1
   template:
     metadata:
       labels:
-        app: ft_services
+        app: nginx
     spec:
       volumes:
       - name: shared-data

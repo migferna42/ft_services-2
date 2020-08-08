@@ -6,6 +6,6 @@ resources:
   - phpmyadmin.yaml
   - wordpress.yaml
   - mysql.yaml
-  # - telegraf.yaml
-  # - influxdb.yaml
-  # - grafana.yaml
+  - telegraf.yaml
+  - influxdb.yaml
+  - grafana.yaml

@@ -34,19 +34,6 @@ spec:
         ports:
         - containerPort: 4999
         imagePullPolicy: Never
-        env:
-          - name: INFLUX_USER
-            value: telegraf
-          - name: INFLUX_URL
-            value: "http://influxdb-svc:8086"
-          - name: INFLUX_SKIP_DATABASE_CREATION
-            value: "false"
-          - name: INFLUX_PASSWORD
-            value: "pass"
-          - name: NODE_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: spec.nodeName
 
 ---
 
@@ -57,7 +44,7 @@ metadata:
   namespace: default
 rules:
 - apiGroups: [ "", "extensions", "apps" ]
-  resources: [ "daemonsets", "deployments", "endpoints", "nodes", "persistentvolumes", "persistentvolumeclaims", "pods", "services", "statefulsets" ]
+  resources: [ "daemonsets", "deployments", "endpoints", "ingresses", "nodes", "persistentvolumes", "persistentvolumeclaims", "pods", "services", "statefulsets" ]
   verbs: [ "get", "list", "watch"]
 
 ---
