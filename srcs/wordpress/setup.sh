@@ -3,7 +3,7 @@
 mv /wordpress/* /www && chmod -R 775 /www
 
 # wordpress database creation
-sleep 10
+sleep 15
 MYSQL="mysql -h mysql -u root"
 $MYSQL -e "grant all privileges on */* to 'root'@'%';"
 $MYSQL -e 'flush privileges;'

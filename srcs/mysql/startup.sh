@@ -30,5 +30,5 @@ echo "[i] run tempfile: $tfile"
 rm -f $tfile
 
 echo "[i] Sleeping 5 sec"
-sleep 5
+sleep 4
 exec /usr/bin/mysqld --user=root --console --skip-networking=0 --skip-grant-tables=0

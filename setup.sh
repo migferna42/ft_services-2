@@ -48,8 +48,6 @@ fi
 eval $(minikube docker-env)
 
 IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`;
-# find srcs -type f -exec sed -i -e "s/hop-sed/$IP/g" {} \;
-# rm -f srcs/*-e srcs/*/*-e;
 
 docker build -t mysql-image srcs/mysql
 docker build -t cleaner-image srcs/cleaner
@@ -58,7 +56,8 @@ docker build -t phpmyadmin-image srcs/phpmyadmin
 docker build -t wordpress-image srcs/wordpress
 docker build -t grafana-image srcs/grafana
 docker build -t influxdb-image srcs/influxdb
-docker build -t telegraf-image --build-arg IP=$IP srcs/telegraf
+docker build -t telegraf-image srcs/telegraf
+docker build -t ftps-image --build-arg IP=$IP srcs/ftps
 kubectl apply -k srcs
 
 sleep 6 && open https://192.168.99.111
@@ -69,7 +68,3 @@ read hop
 # clean up
 kubectl delete deployments --all
 kubectl delete svc --all
-
-# kubectl delete -k srcs
-# find srcs -type f -exec sed -i -e "s/$IP/hop-sed/g" {} \;;
-# rm -f srcs/*-e srcs/*/*-e;
