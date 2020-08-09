@@ -35,8 +35,9 @@ then
     exit 1
 fi
 
-if ! minikube status >/dev/null 2>&1
-then
+#if ! minikube status >/dev/null 2>&1
+#then
+        echo "Starting cluster..."
     if [[ $OSTYPE == "darwin"* ]]
     then
         if ! minikube start --vm-driver=virtualbox --cpus 3 --disk-size=30000mb --memory=3000mb --bootstrapper=kubeadm
@@ -52,11 +53,11 @@ then
         fi
     fi
     minikube addons enable metrics-server
-    kubectl edit configmap -n kube-system kube-proxy
+    #kubectl edit configmap -n kube-system kube-proxy
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
     kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-fi
+#fi
 
 kubectl delete deployments --all
 kubectl delete svc --all
@@ -82,9 +83,9 @@ IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed 
 
 sed -i.backup "s/metallb_ips/$ftps_ip-$wordpress_ip/g" srcs/metallb.yaml
 sed -i.backup "s/grafana_ip/$grafana_ip/g" srcs/nginx/nginx.conf
-sed -i'' "s/nginx_ip/$nginx_ip/g" srcs/nginx/nginx.conf
-sed -i'' "s/phpmyadmin_ip/$phpmyadmin_ip/g" srcs/nginx/nginx.conf
-sed -i'' "s/wordpress_ip/$wordpress_ip/g" srcs/nginx/nginx.conf
+sed -i.trash "s/nginx_ip/$nginx_ip/g" srcs/nginx/nginx.conf
+sed -i.trash "s/phpmyadmin_ip/$phpmyadmin_ip/g" srcs/nginx/nginx.conf
+sed -i.trash "s/wordpress_ip/$wordpress_ip/g" srcs/nginx/nginx.conf
 sed -i.backup "s/LB_wordpress_ip/$wordpress_ip/g" srcs/wordpress/wordpressconf.sql
 
 docker build -t mysql-image srcs/mysql
@@ -100,6 +101,7 @@ kubectl apply -k srcs
 mv srcs/metallb.yaml.backup srcs/metallb.yaml
 mv srcs/nginx/nginx.conf.backup srcs/nginx/nginx.conf
 mv srcs/wordpress/wordpressconf.sql.backup srcs/wordpress/wordpressconf.sql
+rm -rf srcs/nginx/*.trash*
 
 if [[ $OSTYPE == "darwin"* ]]
 then

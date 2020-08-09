@@ -107,8 +107,8 @@ CREATE TABLE `wp_options` (
 --
 
 INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES
-(1, 'siteurl', 'http://172.17.0.6:5050', 'yes'),
-(2, 'home', 'http://172.17.0.6:5050', 'yes'),
+(1, 'siteurl', 'http://LB_wordpress_ip:5050', 'yes'),
+(2, 'home', 'http://LB_wordpress_ip:5050', 'yes'),
 (3, 'blogname', 'FUCK FT_SERVICES', 'yes'),
 (4, 'blogdescription', 'sisi', 'yes'),
 (5, 'users_can_register', '0', 'yes'),

@@ -13,33 +13,33 @@ spec:
     port: 5050
     targetPort: 5050
   type: LoadBalancer
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: wordpress-pv
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: "/var/lib/wordpress"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wordpress-pv-claim
-  labels:
-    app: wordpress
-spec:
-  storageClassName: manual
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: wordpress-pv
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 1Gi
+#   accessModes:
+#   - ReadWriteOnce
+#   hostPath:
+#     path: "/var/lib/wordpress"
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: wordpress-pv-claim
+#   labels:
+#     app: wordpress
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,23 +55,23 @@ spec:
       labels:
         app: wordpress
     spec:
-      volumes:
-      - name: shared-data
-        persistentVolumeClaim:
-          claimName: wordpress-pv-claim
+      # volumes:
+      # - name: shared-data
+      #   persistentVolumeClaim:
+      #     claimName: wordpress-pv-claim
       containers:
       - name: wordpress
         image: wordpress-image
         imagePullPolicy: Never
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
         ports:
         - containerPort: 5050
-      initContainers:
-      - name: cleaner
-        image: cleaner-image
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
-        imagePullPolicy: Never
+      #   volumeMounts:
+      #   - name: shared-data
+      #     mountPath: /www
+      # initContainers:
+      # - name: cleaner
+      #   image: cleaner-image
+      #   volumeMounts:
+      #   - name: shared-data
+      #     mountPath: /www
+      #   imagePullPolicy: Never

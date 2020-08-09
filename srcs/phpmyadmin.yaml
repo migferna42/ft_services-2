@@ -55,23 +55,23 @@ spec:
       labels:
         app: phpmyadmin
     spec:
-      volumes:
-      - name: shared-data
-        persistentVolumeClaim:
-          claimName: phpmyadmin-pv-claim
+      # volumes:
+      # - name: shared-data
+      #   persistentVolumeClaim:
+      #     claimName: phpmyadmin-pv-claim
       containers:
       - name: phpmyadmin
         image: phpmyadmin-image
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
-        imagePullPolicy: Never
         ports:
         - containerPort: 5000
-      initContainers:
-      - name: cleaner
-        image: cleaner-image
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
         imagePullPolicy: Never
+      #   volumeMounts:
+      #   - name: shared-data
+      #     mountPath: /www
+      # initContainers:
+      # - name: cleaner
+      #   image: cleaner-image
+      #   volumeMounts:
+      #   - name: shared-data
+      #     mountPath: /www
+      #   imagePullPolicy: Never
