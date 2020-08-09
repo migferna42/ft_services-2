@@ -59,24 +59,17 @@ spec:
         app: ftps
     spec:
       volumes:
-      - name: shared-data
+      - name: ftps-pv
         persistentVolumeClaim:
           claimName: ftps-pv-claim
       containers:
       - name: ftps
         image: ftps-image
         volumeMounts:
-        - name: shared-data
+        - name: ftps-pv
           mountPath: /srv/ftp
         imagePullPolicy: Never
         ports:
         - containerPort: 20
         - containerPort: 21
         - containerPort: 21000
-      initContainers:
-      - name: cleaner
-        image: cleaner-image
-        volumeMounts:
-        - name: shared-data
-          mountPath: /www
-        imagePullPolicy: Never

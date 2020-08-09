@@ -7,8 +7,7 @@ sleep 15
 MYSQL="mysql -h mysql -u root"
 $MYSQL -e "grant all privileges on */* to 'root'@'%';"
 $MYSQL -e 'flush privileges;'
-$MYSQL -e 'drop database if exists wordpress;'
-$MYSQL -e 'CREATE DATABASE wordpress;'
+$MYSQL -e 'CREATE DATABASE [IF NOT EXISTS] wordpress;'
 $MYSQL wordpress < /wordpressconf.sql
 
 # starting telegraf and php server

@@ -70,10 +70,3 @@ spec:
       - name: influxdb-pv
         persistentVolumeClaim:
           claimName: influxdb-pv-claim
-      initContainers:
-        - name: cleaner
-          image: cleaner-image
-          volumeMounts:
-          - name: influxdb-pv
-            mountPath: /www
-          imagePullPolicy: Never
