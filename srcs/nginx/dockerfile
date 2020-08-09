@@ -1,6 +1,6 @@
 FROM alpine
 
-EXPOSE 80 443
+EXPOSE 80 443 22
 
 RUN apk update \
 && apk add bash sed
@@ -29,12 +29,10 @@ RUN apk add openssl \
 
 #ssh setup
 RUN apk add openssh \
-&& adduser -D anon \
-&& echo "anon:anon"|chpasswd \
+&& echo "www:www" | chpasswd \
+&& echo "I may have changed this message by editing /etc/motd" > /etc/motd \
 && ssh-keygen -A
 
-
-COPY start.sh /
-RUN chmod 755 /start.sh
-
-CMD sh start.sh
+CMD mkdir /www/wordpress /www/phpmyadmin /www/grafana && chown -R www:www /www && chmod 775 -R /www \
+&& /usr/sbin/sshd \
+&& nginx -g "daemon off;"

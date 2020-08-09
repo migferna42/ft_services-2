@@ -9,3 +9,4 @@ resources:
   - telegraf.yaml
   - influxdb.yaml
   - grafana.yaml
+  - ftps.yaml
