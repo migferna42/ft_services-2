@@ -11,5 +11,6 @@ $MYSQL -e 'drop database if exists wordpress;'
 $MYSQL -e 'CREATE DATABASE wordpress;'
 $MYSQL wordpress < /wordpressconf.sql
 
-# starting php server
+# starting telegraf and php server
+telegraf &
 php -S 0.0.0.0:5050 -t /www

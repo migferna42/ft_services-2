@@ -23,7 +23,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "wordpress_ds",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -66,18 +66,18 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "10s"
               ],
               "type": "time"
             },
             {
               "params": [
-                "null"
+                "0"
               ],
               "type": "fill"
             }
           ],
-          "measurement": "kubernetes_deployment",
+          "measurement": "cpu",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -86,7 +86,7 @@
             [
               {
                 "params": [
-                  "created"
+                  "usage_system"
                 ],
                 "type": "field"
               },
@@ -95,13 +95,6 @@
                 "type": "mean"
               }
             ]
-          ],
-          "tags": [
-            {
-              "key": "deployment_name",
-              "operator": "=",
-              "value": "wordpress-deployment"
-            }
           ]
         }
       ],
@@ -109,7 +102,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "cpu graph",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -154,7 +147,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [[ "hop" == "hop" ]]
+then
+  echo "starting..."
+else
+  echo "launch with ./setup.sh or bash setup.sh"
+  exit 1
+fi
+
 # Ensure minikube is launched, adapt stuff for linux and mac
 if [[ $OSTYPE == "darwin"* ]]
 then
@@ -72,12 +80,12 @@ eval $(minikube docker-env);
 
 IP=`kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p`;
 
-sed -i -e "s/metallb_ips/$ftps_ip-$wordpress_ip/g" srcs/metallb.yaml
-sed -i -e "s/grafana_ip/$grafana_ip/g" srcs/nginx/nginx.conf
-sed -i '' "s/nginx_ip/$nginx_ip/g" srcs/nginx/nginx.conf
-sed -i '' "s/phpmyadmin_ip/$phpmyadmin_ip/g" srcs/nginx/nginx.conf
-sed -i '' "s/wordpress_ip/$wordpress_ip/g" srcs/nginx/nginx.conf
-sed -i -e "s/LB_wordpress_ip/$wordpress_ip/g" srcs/wordpress/wordpressconf.sql
+sed -i.backup "s/metallb_ips/$ftps_ip-$wordpress_ip/g" srcs/metallb.yaml
+sed -i.backup "s/grafana_ip/$grafana_ip/g" srcs/nginx/nginx.conf
+sed -i'' "s/nginx_ip/$nginx_ip/g" srcs/nginx/nginx.conf
+sed -i'' "s/phpmyadmin_ip/$phpmyadmin_ip/g" srcs/nginx/nginx.conf
+sed -i'' "s/wordpress_ip/$wordpress_ip/g" srcs/nginx/nginx.conf
+sed -i.backup "s/LB_wordpress_ip/$wordpress_ip/g" srcs/wordpress/wordpressconf.sql
 
 docker build -t mysql-image srcs/mysql
 docker build -t cleaner-image srcs/cleaner
@@ -86,15 +94,18 @@ docker build -t phpmyadmin-image srcs/phpmyadmin
 docker build -t wordpress-image srcs/wordpress
 docker build -t grafana-image srcs/grafana
 docker build -t influxdb-image srcs/influxdb
-docker build -t telegraf-image srcs/telegraf
-docker build -t ftps-image --build-arg IP=$ftps_ip srcs/ftps
+docker build -t ftps-image srcs/ftps
 kubectl apply -k srcs
 
-sleep 16
+mv srcs/metallb.yaml.backup srcs/metallb.yaml
+mv srcs/nginx/nginx.conf.backup srcs/nginx/nginx.conf
+mv srcs/wordpress/wordpressconf.sql.backup srcs/wordpress/wordpressconf.sql
 
-mv srcs/metallb.yaml-e srcs/metallb.yaml
-mv srcs/nginx/nginx.conf-e srcs/nginx/nginx.conf
-mv srcs/wordpress/wordpressconf.sql-e srcs/wordpress/wordpressconf.sql
+if [[ $OSTYPE == "darwin"* ]]
+then
+  open http://$nginx_ip
+else
+  sensible-browser http://$nginx_ip
+fi
 
-open http://$nginx_ip
 #minikube dashboard

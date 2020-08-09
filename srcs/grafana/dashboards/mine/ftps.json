@@ -6,7 +6,7 @@
           "datasource": "-- Grafana --",
           "enable": true,
           "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
+          "iconColor": "rgba(0, 200, 200, 1)",
           "name": "Annotations & Alerts",
           "type": "dashboard"
         }
@@ -23,8 +23,7 @@
         "bars": false,
         "dashLength": 10,
         "dashes": false,
-        "datasource": null,
-        "description": "something quint",
+        "datasource": "ftps_ds",
         "fieldConfig": {
           "defaults": {
             "custom": {}
@@ -67,18 +66,18 @@
             "groupBy": [
               {
                 "params": [
-                  "$__interval"
+                  "10s"
                 ],
                 "type": "time"
               },
               {
                 "params": [
-                  "null"
+                  "0"
                 ],
                 "type": "fill"
               }
             ],
-            "measurement": "kubernetes_deployment",
+            "measurement": "cpu",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -87,7 +86,7 @@
               [
                 {
                   "params": [
-                    "created"
+                    "usage_system"
                   ],
                   "type": "field"
                 },
@@ -96,13 +95,6 @@
                   "type": "mean"
                 }
               ]
-            ],
-            "tags": [
-              {
-                "key": "deployment_name",
-                "operator": "=",
-                "value": "ftps"
-              }
             ]
           }
         ],
@@ -110,7 +102,7 @@
         "timeFrom": null,
         "timeRegions": [],
         "timeShift": null,
-        "title": "FTPS",
+        "title": "cpu graph",
         "tooltip": {
           "shared": true,
           "sort": 0,
@@ -155,7 +147,7 @@
       "list": []
     },
     "time": {
-      "from": "now-6h",
+      "from": "now-5m",
       "to": "now"
     },
     "timepicker": {

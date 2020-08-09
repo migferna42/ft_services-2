@@ -6,9 +6,10 @@ spec:
   selector:
     app: ftps
   ports:
-  - protocol: TCP
+  - name: ftps
     port: 21
     targetPort: 21
+  - name: kube-ftps
     port: 21000
     targetPort: 21000
   type: LoadBalancer
@@ -63,7 +64,7 @@ spec:
         image: ftps-image
         volumeMounts:
         - name: shared-data
-          mountPath: /www
+          mountPath: /srv/ftp
         imagePullPolicy: Never
         ports:
         - containerPort: 21

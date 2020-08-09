@@ -1,6 +1,6 @@
 apiVersion: 1
 providers:
-- name: 'default'
+- name: 'ft_services'
   orgId: 1
   type: file
   folder: ''
