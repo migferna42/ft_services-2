@@ -4,7 +4,9 @@ FROM alpine
 RUN apk update \
 && apk add bash vsftpd \
 && rm -rf /var/cache/apk/* \
-&& mkdir /srv/ftp
+&& mkdir /srv/ftp \
+&& adduser -D -g 'www' www \
+&& echo "www:www" | chpasswd \
 COPY vsftpd.conf /etc/vsftpd/
 
 #telegraf setup
@@ -17,6 +19,8 @@ RUN mkdir /etc/telegraf \
 COPY telegraf.conf /etc/telegraf/telegraf.conf
 
 COPY start.sh /
+
+VOLUME ["/srv/ftp"]
 
 EXPOSE 21 21000
 CMD bash /start.sh
