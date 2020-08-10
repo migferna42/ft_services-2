@@ -32,3 +32,11 @@ spec:
         ports:
         - containerPort: 5000
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pidof telegraf
+          initialDelaySeconds: 30
+          periodSeconds: 2

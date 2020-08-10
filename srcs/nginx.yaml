@@ -41,9 +41,11 @@ spec:
         - containerPort: 80
         - containerPort: 443
         - containerPort: 22
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #     - ps aux | grep "sshd"
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /livenessProbe.sh
+          initialDelaySeconds: 30
+          periodSeconds: 2

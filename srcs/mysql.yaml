@@ -65,6 +65,14 @@ spec:
         volumeMounts:
         - name: mysql-pv
           mountPath: /var/lib/mysql/
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pidof telegraf
+          initialDelaySeconds: 30
+          periodSeconds: 2
       volumes:
         - name: mysql-pv
           persistentVolumeClaim:

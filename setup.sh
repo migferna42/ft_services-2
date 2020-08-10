@@ -35,28 +35,28 @@ then
     exit 1
 fi
 
-if ! minikube status >/dev/null 2>&1
-then
-    if [[ $OSTYPE == "darwin"* ]]
-    then
-        if ! minikube start --vm-driver=virtualbox --cpus 3 --disk-size=30000mb --memory=3000mb --bootstrapper=kubeadm
-        then
-            echo Cannot start minikube!
-            exit 1
-        fi
-    else
-      if ! minikube start --vm-driver=docker --bootstrapper=kubeadm
-        then
-            echo Cannot start minikube!
-            exit 1
-        fi
-    fi
-    minikube addons enable metrics-server
-    #kubectl edit configmap -n kube-system kube-proxy
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-    kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-fi
+# if ! minikube status >/dev/null 2>&1
+# then
+#     if [[ $OSTYPE == "darwin"* ]]
+#     then
+#         if ! minikube start --vm-driver=virtualbox --cpus 3 --disk-size=30000mb --memory=3000mb --bootstrapper=kubeadm
+#         then
+#             echo Cannot start minikube!
+#             exit 1
+#         fi
+#     else
+#       if ! minikube start --vm-driver=docker --bootstrapper=kubeadm
+#         then
+#             echo Cannot start minikube!
+#             exit 1
+#         fi
+#     fi
+#     minikube addons enable metrics-server
+#     #kubectl edit configmap -n kube-system kube-proxy
+#     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+#     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+#     kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+# fi
 
 kubectl delete deployments --all
 kubectl delete svc --all
@@ -104,6 +104,6 @@ rm -rf srcs/nginx/*.trash*
 
 echo "index : http://$nginx_ip"
 echo "ssh connection : ssh www@$nginx_ip"
-echo "ftp connection (linux only): lftp ftps_ip"
+echo "ftp connection (linux only): lftp $ftps_ip"
 
 minikube dashboard

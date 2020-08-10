@@ -43,5 +43,6 @@ RUN mkdir /etc/telegraf \
 COPY telegraf.conf /etc/telegraf/telegraf.conf
 
 COPY start.sh /
+COPY livenessProbe.sh /
 
 CMD bash /start.sh

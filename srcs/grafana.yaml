@@ -41,4 +41,12 @@ spec:
           value: root
         - name: GF_SECURITY_ADMIN_PASSWORD
           value: root
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pidof telegraf
+          initialDelaySeconds: 30
+          periodSeconds: 2
 

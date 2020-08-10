@@ -66,6 +66,14 @@ spec:
         volumeMounts:
         - name: influxdb-pv
           mountPath: /var/lib/influxdb
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pidof telegraf
+          initialDelaySeconds: 30
+          periodSeconds: 2
       volumes:
       - name: influxdb-pv
         persistentVolumeClaim:

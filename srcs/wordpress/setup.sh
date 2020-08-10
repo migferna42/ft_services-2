@@ -3,12 +3,14 @@
 mv /wordpress/* /www && chmod -R 775 /www
 
 # wordpress database creation
-sleep 15
+sleep 10
 MYSQL="mysql -h mysql -u root"
-$MYSQL -e "grant all privileges on */* to 'root'@'%';"
-$MYSQL -e 'flush privileges;'
-$MYSQL -e 'CREATE DATABASE [IF NOT EXISTS] wordpress;'
-$MYSQL wordpress < /wordpressconf.sql
+
+if ! $MYSQL -e 'use wordpress'
+then
+  $MYSQL -e 'CREATE DATABASE wordpress;'
+  $MYSQL wordpress < /wordpressconf.sql
+fi
 
 # starting telegraf and php server
 telegraf &

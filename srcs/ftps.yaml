@@ -73,3 +73,11 @@ spec:
         - containerPort: 20
         - containerPort: 21
         - containerPort: 21000
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - pidof telegraf
+          initialDelaySeconds: 30
+          periodSeconds: 2
