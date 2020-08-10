@@ -6,9 +6,6 @@ spec:
   selector:
     app: ftps
   ports:
-  - name: data
-    port: 20
-    targetPort: 20
   - name: ftps
     port: 21
     targetPort: 21
@@ -70,7 +67,6 @@ spec:
           mountPath: /home
         imagePullPolicy: Never
         ports:
-        - containerPort: 20
         - containerPort: 21
         - containerPort: 21000
         livenessProbe:

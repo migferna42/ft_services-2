@@ -22,8 +22,7 @@ tfile=`mktemp`
 	# save sql
 cat << EOF > $tfile
 CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '';
-grant all privileges on *.* to 'root'@'%';
-grant all privileges on */* to 'root'@'%';
+grant all privileges on *.* to 'root'@'%' identified by '' with grant option;
 flush privileges;
 EOF
 

@@ -70,11 +70,11 @@ then
     phpmyadmin_ip='192.168.99.113'
     wordpress_ip='192.168.99.114'
 else
-    ftps_ip='172.17.0.2'
-    grafana_ip='172.17.0.3'
-    nginx_ip='172.17.0.4'
-    phpmyadmin_ip='172.17.0.5'
-    wordpress_ip='172.17.0.6'
+    ftps_ip='172.17.0.12'
+    grafana_ip='172.17.0.13'
+    nginx_ip='172.17.0.14'
+    phpmyadmin_ip='172.17.0.15'
+    wordpress_ip='172.17.0.16'
 fi
 
 eval $(minikube docker-env);
@@ -86,7 +86,7 @@ sed -i.backup "s/grafana_ip/$grafana_ip/g" srcs/nginx/nginx.conf
 sed -i.trash "s/nginx_ip/$nginx_ip/g" srcs/nginx/nginx.conf
 sed -i.trash "s/phpmyadmin_ip/$phpmyadmin_ip/g" srcs/nginx/nginx.conf
 sed -i.trash "s/wordpress_ip/$wordpress_ip/g" srcs/nginx/nginx.conf
-sed -i.backup "s/LB_wordpress_ip/$wordpress_ip/g" srcs/wordpress/wordpressconf.sql
+sed -i.backup "s/wordpress_ip/$wordpress_ip/g" srcs/wordpress/wordpressconf.sql
 
 docker build -t mysql-image srcs/mysql
 docker build -t cleaner-image srcs/cleaner
@@ -105,6 +105,6 @@ rm -rf srcs/nginx/*.trash*
 
 echo "index : http://$nginx_ip"
 echo "ssh connection : ssh www@$nginx_ip password: www"
-echo "ftp connection : ftpes://$ftps_ip username: www password: www "
+echo "ftp connection : ftpes://$ftps_ip username: www password: www"
 
 minikube dashboard
