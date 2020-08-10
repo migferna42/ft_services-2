@@ -95,7 +95,7 @@ docker build -t phpmyadmin-image srcs/phpmyadmin
 docker build -t wordpress-image srcs/wordpress
 docker build -t grafana-image srcs/grafana
 docker build -t influxdb-image srcs/influxdb
-docker build -t ftps-image srcs/ftps
+docker build -t ftps-image --build-arg IP=$ftps_ip srcs/ftps
 kubectl apply -k srcs
 
 mv srcs/metallb.yaml.backup srcs/metallb.yaml
@@ -104,7 +104,7 @@ mv srcs/wordpress/wordpressconf.sql.backup srcs/wordpress/wordpressconf.sql
 rm -rf srcs/nginx/*.trash*
 
 echo "index : http://$nginx_ip"
-echo "ssh connection : ssh www@$nginx_ip"
-echo "ftp connection (linux only): lftp $ftps_ip"
+echo "ssh connection : ssh www@$nginx_ip password: www"
+echo "ftp connection : ftpes://$ftps_ip username: www password: www "
 
 minikube dashboard

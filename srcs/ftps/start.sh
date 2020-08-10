@@ -1,5 +1,5 @@
 #!/bin/bash
 telegraf &
-chown -R nobody:nogroup /srv/ftp
-echo "FUCK FT_SERVICES" > /srv/ftp/fuck_ft_services
-/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
+{ echo "www"; echo "www"; } | adduser www
+echo "FUCK FT_SERVICES" > /home/www/fuck_ft_services
+/usr/sbin/pure-ftpd -Y 2 -p 21000:21000 -P $ENV_IP

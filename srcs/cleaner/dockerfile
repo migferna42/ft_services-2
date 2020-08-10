@@ -1,6 +1,0 @@
-FROM alpine
-RUN apk update \
-&& apk add bash \
-&& mkdir /www \
-&& rm -rf /var/cache/apk/*
-CMD rm -rf /www/* && chmod -R 775 /www

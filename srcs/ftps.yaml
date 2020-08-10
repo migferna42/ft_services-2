@@ -67,7 +67,7 @@ spec:
         image: ftps-image
         volumeMounts:
         - name: ftps-pv
-          mountPath: /srv/ftp
+          mountPath: /home
         imagePullPolicy: Never
         ports:
         - containerPort: 20
